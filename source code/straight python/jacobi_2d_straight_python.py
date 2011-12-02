@@ -18,6 +18,13 @@ def solve(u, u_new):
                            u[y,x + 1] + 
                            u[y,x - 1]) / 4
 
+def solve_vectorized(u, u_new):
+    u_new[1:-1, 1:-1] = (
+            u[0:-2, 1:-1] +
+            u[2:, 1:-1] +
+            u[1:-1,0:-2] +
+            u[1:-1, 2:]) / 4
+
 def convergence_test(u_new, u):
     eps = .0001    
     cont = False
@@ -33,10 +40,13 @@ def solver(dim):
     cont = True
     iteration = 0
     while cont == True:
+        print iteration
         if iteration % 2 == 0: #even
-            solve(u, u_new)
+            #solve(u, u_new)
+            solve_vectorized(u, u_new)
         else:
-            solve(u_new, u)
+            #solve(u_new, u)
+            solve_vectorized(u_new, u)
         #test for convergence
         if iteration % 200 == 0:
             cont = convergence_test(u_new, u) 
