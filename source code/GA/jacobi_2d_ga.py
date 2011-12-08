@@ -66,13 +66,23 @@ ga.sync()
 iteration = 0
 start = ga.wtime()
 while True:
-    ga.sync()
     iteration += 1
-    if iteration % 200 == 0:
+    if iteration % HOW_MANY_STEPS_BEFORE_CONVERGENCE_TEST == 0:
         # check for convergence will occur, so make a copy of the GA
+        ga.sync()
         ga.copy(g_a, g_b)
     # the iteration
-    if rlo == 0:
+    if rlo == 0 and rhi == dim:
+        # I own the top and bottom rows
+        ga.sync()
+        my_array = ga.access(g_a)
+        my_array[1:-1,1:-1] = (
+                my_array[0:-2, 1:-1] +
+                my_array[2:, 1:-1] +
+                my_array[1:-1,0:-2] +
+                my_array[1:-1, 2:]) / 4
+        ga.release(g_a)
+    elif rlo == 0:
         # I own the top rows, so get top row of next domain
         next_domain_row = ga.get(g_a, (rhi,0), (rhi+1,dim))
         ga.sync()
@@ -84,7 +94,7 @@ while True:
                 combined[1:-1,0:-2] +
                 combined[1:-1, 2:]) / 4
         ga.release(g_a)
-    elif rank == size-1:
+    elif rhi == dim:
         # I own the bottom rows, so get bottom row of previous domain
         prev_domain_row = ga.get(g_a, (rlo-1,0), (rlo,dim))
         ga.sync()
@@ -109,6 +119,7 @@ while True:
                 combined[1:-1,0:-2] +
                 combined[1:-1, 2:]) / 4
         ga.release(g_a)
+    ga.sync()
     if iteration % HOW_MANY_STEPS_BEFORE_CONVERGENCE_TEST == 0:
         if convergence_test_L2(g_a, g_b):
             break
