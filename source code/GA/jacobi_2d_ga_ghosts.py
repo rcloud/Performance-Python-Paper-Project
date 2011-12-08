@@ -48,17 +48,35 @@ g_a = ga.create_ghosts(ga.C_FLOAT, (dim,dim), (1,1), chunk=(0,dim))
 # create a duplicate GA for the convergence test
 g_b = ga.duplicate(g_a)
 
-# process 0 initializes global array
-# Note: alternatively, each process could initialize its local data using
-# ga.access() and ga.distribution()
-a = np.zeros((dim,dim), dtype=np.float32)
-if rank == 0:
-    a[0,:] = 100 #top row
-    a[:,0] = 75 #left column
-    a[:,a.shape[0] - 1] = 50 #right column
-    ga.put(g_a, a)
-ga.sync()
+ga.zero(g_a)
+(rlo,clo),(rhi,chi) = ga.distribution(g_a)
 
+def set_boundary_conditions_put(g_a):
+    # process 0 initializes global array
+    # this would only set the initial conditions since we are putting an entire
+    # zeros array with the outer elements changed
+    if rank == 0:
+        a = np.zeros((dim,dim), dtype=np.float32)
+        a[0,:] = 100 #top row
+        a[:,0] = 75 #left column
+        a[:,a.shape[0] - 1] = 50 #right column
+        ga.put(g_a, a)
+    ga.sync()
+
+def set_boundary_conditions_access(g_a):
+    # this will reset the outer (ghost) elements back to the boundary cond.
+    if rlo == 0 or clo == 0 or chi == dim:
+        a = ga.access_ghosts(g_a)
+        if rlo == 0:
+            a[0,:] = 100 # I own a top row
+        if clo == 0:
+            a[:,0] = 75 # I own a left column
+        if chi == dim:
+            a[:,-1] = 50 # I own a right column
+        ga.release_update_ghosts(g_a)
+    ga.sync()
+
+set_boundary_conditions_access(g_a)
 iteration = 0
 start = ga.wtime()
 while True:
@@ -69,6 +87,7 @@ while True:
         ga.copy(g_a, g_b)
     # the iteration
     ga.update_ghosts(g_a)
+    set_boundary_conditions_access(g_a)
     my_array = ga.access_ghosts(g_a)
     my_array[1:-1,1:-1] = (
             my_array[0:-2, 1:-1] +
@@ -80,7 +99,7 @@ while True:
         if convergence_test_L2(g_a, g_b):
             break
 
-if DEBUG and rank == 0:
+if DEBUG or True and rank == 0:
     print ga.get(g_a)
 
 if rank == 0:
