@@ -1,0 +1,100 @@
+\begin{thebibliography}{10}
+
+\bibitem{alghamdi2011pet}
+A.~Alghamdi, A.~Ahmadia, D.~Ketcheson, M.~Knepley, K.~Mandli, and L.~Dalcin.
+\newblock Pet-claw: A scalable parallel nonlinear wave propagation solver for
+  python, acm, 2011.
+\newblock In {\em proceedings of HPC}, 2011.
+
+\bibitem{behnel2011cython}
+S.~Behnel, R.~Bradshaw, C.~Citro, L.~Dalcin, D.~Seljebotn, and K.~Smith.
+\newblock Cython: The best of both worlds.
+\newblock {\em Computing in Science \& Engineering}, (99):1--1, 2011.
+
+\bibitem{cai2005performance}
+X.~Cai, H.~P. Langtangen, and H.~Moe.
+\newblock On the performance of the python programming language for serial and
+  parallel scientific computations.
+\newblock {\em Scientific Programming}, 13(1):31--56, 2005.
+
+\bibitem{Daily:Scipy2011:2011}
+Jeff Daily.
+\newblock High performance parallel computing in python using numpy and the
+  global arrays toolkit.
+\newblock In {\em SciPy 2011}, 2011.
+
+\bibitem{dalcin2008mpi}
+L.~Dalcín, R.~Paz, M.~Storti, and J.~D'Elía.
+\newblock Mpi for python: Performance improvements and mpi-2 extensions.
+\newblock {\em Journal of Parallel and Distributed Computing}, 68(5):655--662,
+  2008.
+
+\bibitem{klockner2011pycuda}
+A.~Klöckner, N.~Pinto, Y.~Lee, B.~Catanzaro, P.~Ivanov, and A.~Fasih.
+\newblock Pycuda and pyopencl: A scripting-based approach to gpu run-time code
+  generation.
+\newblock {\em Parallel Computing}, 2011.
+
+\bibitem{handsonopenmp}
+T.~Mattson and L.~Meadows.
+\newblock A "hands-on" introduction to openmp.
+\newblock page 120.
+
+\bibitem{miller2002pympi}
+P.~Miller.
+\newblock pympi--an introduction to parallel python using mpi.
+\newblock {\em Lawrence Livermore National Laboratory report UCRL-WEB-151052},
+  2002.
+
+\bibitem{pep3118}
+T.~Oliphant and C.~Banks.
+\newblock Pep 3118 - revising the buffer protocol.
+
+\bibitem{perez2007ipython}
+F.~Perez and B.~E. Granger.
+\newblock Ipython: a system for interactive scientific computing.
+\newblock {\em Computing in Science \& Engineering}, pages 21--29, 2007.
+
+\bibitem{perez2011python}
+F.~Pérez, B.~Granger, and J.~Hunter.
+\newblock Python: an ecosystem for scientific computing.
+\newblock {\em Computing in Science \& Engineering}, (99):1--1, 2011.
+
+\bibitem{rabenseifner2009hybrid}
+R.~Rabenseifner, G.~Hager, and G.~Jost.
+\newblock Hybrid mpi/openmp parallel programming on clusters of multi-core smp
+  nodes.
+\newblock In {\em Parallel, Distributed and Network-based Processing, 2009 17th
+  Euromicro International Conference on}, pages 427--436. IEEE, 2009.
+
+\bibitem{sala2006pytrilinos}
+M.~Sala, W.~F. Spotz, and M.~A. Heroux.
+\newblock Pytrilinos: High-performance distributed-memory solvers for python.
+\newblock In {\em Proceedings of the 8th international conference on Applied
+  parallel computing: state of the art in scientific computing}, pages
+  966--975. Springer-Verlag, 2006.
+
+\bibitem{sverre2009fast}
+D.~Sverre.
+\newblock Fast numerical computations with cython.
+\newblock In {\em Proceedings of the 8th Python in Science Conference}, number
+  SciPy, pages 15--22, 2009.
+
+\bibitem{Terry:Scipy2011:2011}
+Matt Terry and Joseph Koning.
+\newblock Automation of inertial fusion target design with python.
+\newblock In {\em SciPy 2011}, 2011.
+
+\bibitem{unpingco2008user}
+J.~Unpingco.
+\newblock User friendly high productivity computational workflows using the
+  vision/hpc prototype.
+\newblock In {\em DoD HPCMP Users Group Conference 2008}, pages 387--390. IEEE,
+  2008.
+
+\bibitem{wilbers2009using}
+I.~M. Wilbers, H.~P. Langtangen, and Å. Ødegård.
+\newblock Using cython to speed up numerical python programs.
+\newblock {\em Proceedings of MekIT}, 9, 2009.
+
+\end{thebibliography}

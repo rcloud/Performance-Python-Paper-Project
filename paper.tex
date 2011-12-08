@@ -9,7 +9,7 @@
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 
 \title{Python Programming for High Performance Environments}
-\author{The Author}
+\author{Cloud, Robert L. \thanks{The University of Alabama, School of Engineering} \\ rcloud@uab.edu \and Florisson, Mark \and Daily, Jeff}
 \date{}
 \begin{document}
 \maketitle
@@ -24,67 +24,44 @@ Thanks to David McDaniel, my advisor, for his help in understanding mathematics 
 
 \section{Introduction}
 \subsection{Contemporary Uses of Python in Computation}
-%an example of using python for a high productivity workflow for exploratory high performance programming
-%REFERENCES
-%2)Alghamdi, A, A Ahmadia, D Ketcheson, M Knepley, K Mandli, and L Dalcin. "Pet-Claw: A Scalable Parallel Nonlinear Wave Propagation Solver for Python, %ACM, 2011." In Proceedings of HPC. 2011.	Using python for a highly scalable distributed numerically intense solver
-% 3)Terry, Matt, and Joseph Koning. "Automation of Inertial Fusion Target Design with Python." In Scipy 2011.
-% Another large scale Python program for scientific work example is needed here
 
-The use of Python in the sciences dates back to the 1990s. With the development of libraries supporting efficient arrays and matrices, Python became an attractive language for numerical algorithmic exploration. In the past few years, the community using Python for the  sciences has grown worldwide, evidenced by the popular  SciPy conference, and companies such as Enthought  that has taken advantage of this trend, offering ready built installations of Python complete with tools needed for scientific programming and visualization.
+The use of Python in the sciences dates back to the 1990s. With the development of libraries supporting efficient arrays and matrices, Python became an attractive language for numerical algorithmic exploration. In the past few years, the community using Python for the  sciences has grown worldwide, evidenced by the popular  SciPy conference, and companies such as Enthought  that has taken advantage of this trend, offering ready built installations of Python complete with tools needed for scientific programming and visualization\cite{alghamdi2011pet}.
 
 The attraction to Python comes from its readability, interactivity, extensibility, and openness.  One with little experience in programming can easily begin writing and interacting with Python modules, and existing software libraries, written in low-level languages, can be efficiently wrapped, allowing one to use them in an interactive way.
 
-While Python is well known as an effective language to do exploratory programming, this paper addresses the use of Python in large-scale production scientific applications.   The contemporary use of Python in large-scale, computationally expensive, scientific applications has been largely limited  to role of command to control tighter, I/O, and interfacing with modules written in lower level languages.  Towards this end,  Python has successfully been used for large-scale applications by disparate groups such as the Department of Energy, the Department of Defense, and the German Aerospace Centre.
+While Python is well known as an effective language to do exploratory programming, this paper addresses the use of Python in large-scale production scientific applications.   The contemporary use of Python in large-scale, computationally expensive, scientific applications has been largely limited  to role of command to control tighter, I/O, and interfacing with modules written in lower level languages.  Towards this end,  Python has successfully been used for large-scale applications by disparate groups such as the Department of Energy, the Department of Defense, and the German Aerospace Centre\cite{sala2006pytrilinos}, \cite{Terry:Scipy2011:2011} .
+
+The use of Python in computational settings has become popularized, especially through the work of Perez et al. in their high profile publications.  They offer advice and advocate the use of Python in every stage of application development, from algorithmic exploration, to prototyping, to use in production code \cite{perez2011python}, \cite{perez2007ipython}.  Other work has been done in incorporating Python into high performance installations by Unpingco \cite{unpingco2008user}.  
 
 \subsection{Python as a Computational Platform}
-%REFERENCES
-%1)Cai, X, H P Langtangen, and H Moe. "On the Performance of the Python Programming Language for Serial and Parallel Scientific Computations." Scientific Programming 13, no. 1 (2005): 31-56.  
-%giving early(2005) analysis of programming scientific applications with Python, NumPy and SciPy, parallelizing with PyPar for message passing, and implementing computationally expensive routines in C or Fortran wrapped by Python
 
-%2)Wilbers, I M, H P Langtangen, and ? Ødegård. "Using Cython to Speed Up Numerical Python Programs." Proceedings of MekIT 9 (2009).	
-%An overview of a wide variety of semi-compiled solutions(weave, f2py, numpy vectorization, Instant) compared against pure fortran implementation
-
-%3)Sverre, D. "Fast Numerical Computations with Cython." In Proceedings of the 8Th Python in Science Conference. 2009.
-%Very excellent paper on the functionality of Cython.  Written in 2009, it discusses the difficulties of shared memory parallel python programming as well as giving an example of how one can use mpi4py.  This is pre- OpenMP support, and states that nobody at the time was working on that.  
-
- Since the  introduction of high performance array objects by the NumPy project and its predecessors, Python has become a viable computational platform. Some early(2005) analysis of performance was performed by Cai and Langtangen, demonstrating that Python could be used efficiently if it  made use of modules written in lower-level languages for the computationally expensive parts of the application.  While this has been the established way to use Python in scientific computing applications, very recent developments, however, enable high-performance code to be run in a manner more consistent with native Python semantics.
+ Since the  introduction of high performance array objects by the NumPy project and its predecessors, Python has become a viable computational platform. Some early(2005) analysis of performance was performed by Cai and Langtangen \cite{cai2005performance}, demonstrating that Python could be used efficiently if it  made use of modules written in lower-level languages for the computationally expensive parts of the application.  While this has been the established way to use Python in scientific computing applications, very recent developments, however, enable high-performance code to be run in a manner more consistent with native Python semantics.
 
  The most readily available mechanism to write efficient computational code is to use NumPy vectorization, or slicing.  This syntax is familiar to anyone who has used MATLAB, and when a statement is formulated in such a way, it is executed with high performance C loops, which, for most purposes achieve sufficient performance, orders of magnitude above native Python speeds.  This feature is most apropos when using Python as an alternative to engineering software suites, but there are limitations here.   
  
- One limitation of this method is that often, one cannot formulate a problem using such slicing, or one finds themselves still bounded by performance. In these cases, one must look for another alternative mechanism to improve performance.  There are readily available means to interface with compiled code such as C and Fortran, e.g., Python's C extensions and f2py which allow one to import compiled code directly into Python as modules.  There are also a wide variety of more lightweight methods such as the weave package included with the SciPy library.  Wilbers and Langtangen  discuss many of them and analyze their relative performance compared  to a benchmark program written in Fortran.
+ One limitation of this method is that often, one cannot formulate a problem using such slicing, or one finds themselves still bounded by performance. In these cases, one must look for another alternative mechanism to improve performance.  There are readily available means to interface with compiled code such as C and Fortran, e.g., Python's C extensions and F2PY which allow one to import compiled code directly into Python as modules.  There are also a wide variety of more lightweight methods such as the weave package included with the SciPy library.  Wilbers and Langtangen  discuss many of them and analyze their relative performance compared  to a benchmark program written in Fortran \cite{wilbers2009using} .
 
-A very promising development from the last few years has been the Cython  compiler which enables one to write code retaining many of the Python intrinsics such as multidimensional NumPy  array indexing while giving performance on the order of purely compiled programs.  Sverre discusses how one can efficiently use Cython  to achieve high performance as well as the steps one would take in gradually optimizing such a program.  The beauty of Cython is that one can optimize the program gradually by first writing one's program purely in Python, detecting the performance bottlenecks and then adding some C like extensions in appropriate places until one achieves the required performance.  
+A very promising development from the last few years has been the Cython  compiler which enables one to write code retaining many of the Python intrinsics such as multidimensional NumPy  array indexing while giving performance on the order of purely compiled programs.  Sverre discusses how one can efficiently use Cython  to achieve high performance as well as the steps one would take in gradually optimizing such a program \cite{sverre2009fast}.  The beauty of Cython is that one can optimize the program gradually by first writing one's program purely in Python, detecting the performance bottlenecks and then adding some C like extensions in appropriate places until one achieves the required performance.  
 
- In scientific computing, one frequently needs to make use of existing scientific libraries such as LAPACK or its implementation by Intel.   The SciPy library  provides the functionality to do so, giving access to both the native Fortran interfaces as well as more easily usable Python wrappers which require fewer parameters.  Notably, the Enthought Python Distribution(EPD) is linked to the runtime libraries of Intel's MKL, giving access to high performance multithreaded routines callable from Python.  Wrapping existing libraries with Python has become very commonplace and there are too many to list here, but one promising example is CLAWPACK and its Python wrapper PET-CLAW.
+ In scientific computing, one frequently needs to make use of existing scientific libraries such as LAPACK or its implementation by Intel.   The SciPy library  provides the functionality to do so, giving access to both the native Fortran interfaces as well as more easily usable Python wrappers which require fewer parameters.  Notably, the Enthought Python Distribution(EPD) is linked to the runtime libraries of Intel's MKL, giving access to high performance multithreaded routines callable from Python.  Wrapping existing libraries with Python has become very commonplace and there are too many to list here, but one promising example is CLAWPACK and its Python wrapper PET-CLAW \cite{alghamdi2011pet}.
  
 
 
 \subsection{Challenges to Using Python at Scale}
-%REFERENCES
-%1)Sverre, D. "Fast Numerical Computations with Cython." In Proceedings of the 8Th Python in Science Conference. 2009.
-%Very excellent paper on the functionality of Cython.  Written in 2009, it discusses the difficulties of shared memory parallel python programming as well as giving an example of how one can use mpi4py.  This is pre- OpenMP support, and states that nobody at the time was working on that.  	
-
-%see william scullion of argonne for problems running python on the tens of thousands of cores
 
 The impediments to using Python in large-scale scientific applications are twofold. First, even though there are efficient Python bindings to MPI, it has been demonstrated that CPython  has problems when running on many thousands of cores.   In large-scale distributed machines with a shared file system, the simple importation of Python modules can take a prohibitively long time. This is because many thousands of processes are concurrently requesting access to small files, resulting in thrashing. There is ongoing work to remedy this.  Several institutions, most prominently the DoE Labs, have developed tailored solutions for their particular problem.  A more general solution being worked on at Argonne, which is developing a method to use an MPI broadcast for the distribution of Python modules.
 
- The second impediment to using Python in HPC is its limited support for shared memory parallel programming. The problems associated with this are discussed in Sverre,  but is most prominently the limitations of the Global Interpreter Lock(GIL),  which prevents multiple Python threads from being executed on the CPU concurrently.     While there have been ways to circumvent this for some time,  noting specifically the multiprocessing module in the Python library(though this is a solution where processes don't share the same memory space), this impediment has very recently been sidestepped by the Python community in the  form of a Cython  compiler  supporting shared memory parallel programming with OpenMP. This recent development is key to our argument that Python can now, more than ever, be effectively used as a primary language for  large-scale parallel computational work.
+ The second impediment to using Python in HPC is its limited support for shared memory parallel programming. The problems associated with this are discussed in Sverre\cite{sverre2009fast},  but is most prominently the limitations of the Global Interpreter Lock(GIL),  which prevents multiple Python threads from being executed on the CPU concurrently.     While there have been ways to circumvent this for some time,  noting specifically the multiprocessing module in the Python library(though this is a solution where processes don't share the same memory space), this impediment has very recently been sidestepped by the Python community in the  form of a Cython  compiler  supporting shared memory parallel programming with OpenMP. This recent development is key to our argument that Python can now, more than ever, be effectively used as a primary language for  large-scale parallel computational work.
 
 \subsection{Parallel Programming Facilities}
-%REFERENCES
-%1)Sverre, D. "Fast Numerical Computations with Cython." In Proceedings of the 8Th Python in Science Conference. 2009.
-
-%2)mpi4py Dalcín, L, R Paz, M Storti, and J D'Elía. "MPI for Python: Performance Improvements and MPI-2 Extensions." Journal of Parallel and Distributed Computing 68, no. 5 (2008): doi:10.1016/j.jpdc.2007.09.005
-
-%3)Daily, Jeff. "High Performance Parallel Computing in Python Using Numpy and the Global Arrays Toolkit." In Scipy 2011
 
 While Python has been successfully used in large-scale applications, its role in these has been limited to the non-computational modules. Python was built with extensibility in mind, and one can easily interface between Python and C or Fortran. Thus large-scale applications perform input and output operations using Python but call numerical routines, wrapped by Python, but written a lower-level language. We argue however, that contemporary developments in the Python community enable it to be used successfully in the computational modules of large-scale parallel applications.
 
-	 The most common way to program contemporary supercomputers,  composed of clusters of  distributed commodity machines, is to use the message passing interface. There are efficient bindings to MPI, mpi4py, created by Lisandro Dalcin.   Large-scale distributed applications have been successfully implemented using these bindings, but often, the computational routines are being run through wrappers to a low level language.
+	 The most common way to program contemporary supercomputers,  composed of clusters of  distributed commodity machines, is to use the message passing interface. There are efficient bindings to MPI, mpi4py \cite{dalcin2008mpi}, created by Lisandro Dalcin.   Large-scale distributed applications have been successfully implemented using these bindings, but often, the computational routines are being run through wrappers to a low level language.
 
-	 For shared memory parallel programming, the choices have been rather limited.   One could use the multiprocessing module in the Python library  or call modules written in compiled code that make use of threading,  but both methods are rather restrictive, the first being that processes don’t share a single memory space, and the second needing extra-modular facilities.    While it is certainly true that many MPI implementations can make use of shared memory machines, programming MPI, even in Python, can be cumbersome, difficult, and hard to debug.  OpenMP is the de facto standard for shared memory parallel programming for multi-core machines.  Cython 0.15  supports  shared memory parallel programming using OpenMP  as a backend,  enabling one to easily utilize the resources of contemporary multicore machines. 
+	 For shared memory parallel programming, the choices have been rather limited.   One could use the multiprocessing module in the Python library  or call modules written in compiled code that make use of threading,  but both methods are rather restrictive, the first being that processes don’t share a single memory space, and the second needing extra-modular facilities.    While it is certainly true that many MPI implementations can make use of shared memory machines, programming MPI, even in Python, can be cumbersome, difficult, and hard to debug.  OpenMP\cite{handsonopenmp} is the de facto standard for shared memory parallel programming for multi-core machines.  Cython 0.15  supports  shared memory parallel programming using OpenMP  as a backend,  enabling one to easily utilize the resources of contemporary multicore machines. 
 
-	 There has been much discussion of hybrid MPI and OpenMP  programming and the challenges that follow,  but it will become more important as the number of cores in machines continue to grow. We will demonstrate that one can get excellent performance by making use of the new OpenMP  facilities  while retaining many of the conveniences associated with Python,  and this is key to our argument of the use of Python in even the computationally expensive modules of a scientific application.
+	 There has been much discussion \cite{rabenseifner2009hybrid} of hybrid MPI and OpenMP  programming and the challenges that follow,  but it will become more important as the number of cores in machines continue to grow. We will demonstrate that one can get excellent performance by making use of the new OpenMP  facilities  while retaining many of the conveniences associated with Python,  and this is key to our argument of the use of Python in even the computationally expensive modules of a scientific application.
 	 
 \subsection{A Scientific Application}
 %We will formulate Laplace’s Problem in this section and introduce the concept of jacobi iteration.  It is important that the work be made as accessible as possible.  This is the justification for using Laplace’s Equation and simple iterative techniques
@@ -128,9 +105,9 @@ def solve(u, u_new):
 \end{verbatim}
 
 \subsection{Cython Implementation}
-Cython was developed by a team including Behnel, Bradshaw, Citro, Dalcin, Seljebotn, and Smith as well as others.  It is often difficult or impossible to formulate algorithms in terms of NumPy vectorization.  In these cases, if one wishes to have high performance, one must resort to interfacing with compiled languages.  There are a great magnitude of ways to do this, and Wilbers and Langtangen discuss many of them.  One can interface with Fortran routines or C modules using f2py or Python's C extensions. If one doesn't wish to go this route, they establish that the most compelling option is to use Cython. 
+Cython was developed by a team including Behnel, Bradshaw, Citro, Dalcin, Seljebotn, and Smith as well as others\cite{behnel2011cython}.  It is often difficult or impossible to formulate algorithms in terms of NumPy vectorization.  In these cases, if one wishes to have high performance, one must resort to interfacing with compiled languages.  There are a great magnitude of ways to do this, and Wilbers and Langtangen discuss many of them\cite{wilbers2009using}.  One can interface with Fortran routines or C modules using f2py or Python's C extensions. If one doesn't wish to go this route, they establish that the most compelling option is to use Cython. 
 
-Cython is both a library and a program, capable of compiling Python code into a C file.  Even when just run on a straight Python file, we can see moderate improvements in performance as is discussed in Seljebotn. 
+Cython is both a library and a program, capable of compiling Python code into a C file.  Even when just run on a straight Python file, we can see moderate improvements in performance as is discussed in Seljebotn\cite{sverre2009fast}. 
 
 The real gains in performance are made when we add C types to a module.  One of the great benefits of Cython is that one can gradually optimize until one achieves the performance level that is desired.  This is done by adding flags, typing variables with C types, and manipulating(releasing) the GIL.
 
@@ -200,10 +177,10 @@ the user to operate on arrays with different base types in the same code, as wel
 %CITATIONS: Perez: IPython... 2007
 % cite IPython documentation.
 % more needs to be added to this 
-IPython is a very popular Python shell developed by Fernando Perez and Brian Granger et. al.  Recently, with version 0.11, the parallel capabilities of IPython were rewritten by Min Ragan-Kelley making use of ZeroMQ for networking.  With IPython, one can interactively manipulate and run modules across a distributed environment.  This feature brings Python's exploratory nature to parallel environments and can be very useful for developing and debugging parallel applications.  We refer the interested reader to the IPython documentation.
+IPython\cite{perez2007ipython} is a very popular Python shell developed by Fernando Perez and Brian Granger et. al.  Recently, with version 0.11, the parallel capabilities of IPython were rewritten by Min Ragan-Kelley making use of ZeroMQ for networking.  With IPython, one can interactively manipulate and run modules across a distributed environment.  This feature brings Python's exploratory nature to parallel environments and can be very useful for developing and debugging parallel applications.  We refer the interested reader to the IPython documentation.
 
 \subsection{MPI Implementation with mpi4py}
-Python bindings for MPI have been available since the early 2000's with the PyMPI wrappers from Lawrence Livermore National Labs.  A more contemporary and more fully featured library is available through mpi4py developed by Lisandro Dalcin.  mpi4py provides a complete set of bindings to the MPI 2 specification and has been used successfully in very large scale applications. mpi4py enables one to both pass messages composed of regular Python objects through pickling and the efficient messaging of NumPy buffers.  In order to achieve both high performance and convenience, one should make use of both features.
+Python bindings for MPI have been available since the early 2000's with the PyMPI wrappers from Lawrence Livermore National Labs\cite{miller2002pympi}.  A more contemporary and more fully featured library is available through mpi4py developed by Lisandro Dalcin\cite{dalcin2008mpi}.  mpi4py provides a complete set of bindings to the MPI 2 specification and has been used successfully in very large scale applications. mpi4py enables one to both pass messages composed of regular Python objects through pickling and the efficient messaging of NumPy buffers.  In order to achieve both high performance and convenience, one should make use of both features.
 
 
 \begin{verbatim}
@@ -291,13 +268,141 @@ Again, taking advantage of mpi4py's ability to send native Python objects, we ut
 
 With the combination of mpi4py and the new OpenMP backend of Cython, it becomes possible to develop hybrid OpenMP/MPI applications which take full advantage of shared memory architectures in a distributed environment.  This will become ever more important as multicore computers reach the level of many-core(see e.g. AMD's Bulldozer with 16 cores or Intel's Xeon with 10 cores and 20 threads).  
 
-The advantages and pitfalls of hybrid programming are discussed in some detail in Rabenseifner et. al. 
+The advantages and pitfalls of hybrid programming are discussed in some detail in Rabenseifner et. al. \cite{rabenseifner2009hybrid}
 
 \subsection{Adding Brevity to Distributed Computing with Global Arrays}
 %Jeff can add his wisdom and experience to this section
-The Global Arrays toolkit was developed at Pacific Northwest National Labs in the 1990s as an abstraction for distributed memory clusters enabling shared memory like accesses.  Its primary development purpose was to support high performance chemistry applications, but it has since been ported to a number of architectures and interconnects.  Recently, Python bindings have been developed for the language, and a tutorial was done on these by Jeff Daily at the SciPy 2011 conference.  
+The Global Arrays toolkit was developed at Pacific Northwest National Labs in the 1990s as an abstraction for distributed memory clusters enabling shared memory like accesses.  Its primary development purpose was to support high performance chemistry applications, but it has since been ported to a number of architectures and interconnects.  Recently, Python bindings have been developed for the language, and a tutorial was done on these by Jeff Daily at the SciPy 2011 conference\cite{Daily:Scipy2011:2011}.  
 
-With Global Arrays, communication is implicit, removing the need to perform communications like that shown in the MPI implementation.  
+With Global Arrays, communication is implicit, removing the need to perform communications like that shown in the MPI implementation.  This resolves in a program with much more brevity than an program requiring explicit MPI communication.
+
+\begin{verbatim}
+from mpi4py import MPI
+from ga4py import ga
+import numpy as np
+import sys
+
+EPSILON = .0001
+HOW_MANY_STEPS_BEFORE_CONVERGENCE_TEST = 2
+DEBUG = False
+
+if len(sys.argv) != 2:
+    print "supply dimension"
+    sys.exit()
+
+dim = int(sys.argv[1])
+rank = ga.nodeid()
+size = ga.nnodes()
+
+def print_sync(obj):
+    for proc in range(size):
+        if rank == proc:
+            print "%d: %s" % (proc, obj)
+        ga.sync()
+
+def convergence_test(g_a, g_b):
+    ### PROBLEM: g_b might contain zeros which causes GA to terminate
+    # subtract g_b from g_a, results stored in g_b
+    ga.add(g_a, g_b, g_b, beta=-1)
+    # divide g_b by g_a, results stored in g_b
+    ga.elem_divide(g_b, g_a, g_b)
+    # find the largets element and compare to epsilon
+    value,index = ga.select_elem_max(g_b)
+    if DEBUG:
+        print_sync(value)
+    return value < EPSILON
+        
+def convergence_test_L2(g_a, g_b):
+    # compute L2 norm of change
+    # subtract g_b from g_a, results stored in g_b
+    ga.add(g_a, g_b, g_b, beta=-1)
+    # compute elementwise dot product (i.e. treats N-d arrays as vectors)
+    value = ga.dot(g_b, g_b)
+    if DEBUG:
+        print_sync(value)
+    return value < EPSILON
+
+# create GA, distribute entire rows
+g_a = ga.create(ga.C_FLOAT, (dim,dim), chunk=(0,dim))
+# create a duplicate GA for the convergence test
+g_b = ga.duplicate(g_a)
+
+# process 0 initializes global array
+# Note: alternatively, each process could initialize its local data using
+# ga.access() and ga.distribution()
+a = np.zeros((dim,dim), dtype=np.float32)
+if rank == 0:
+    a[0,:] = 100 #top row
+    a[:,0] = 75 #left column
+    a[:,a.shape[0] - 1] = 50 #right column
+    ga.put(g_a, a)
+ga.sync()
+
+# which piece of array do I own?
+# note that rhi and chi follow python range conventions i.e. [lo,hi)
+(rlo,clo),(rhi,chi) = ga.distribution(g_a)
+
+iteration = 0
+start = ga.wtime()
+while True:
+    ga.sync()
+    iteration += 1
+    if iteration % 200 == 0:
+        # check for convergence will occur, so make a copy of the GA
+        ga.copy(g_a, g_b)
+    # the iteration
+    if rlo == 0:
+        # I own the top rows, so get top row of next domain
+        next_domain_row = ga.get(g_a, (rhi,0), (rhi+1,dim))
+        ga.sync()
+        my_array = ga.access(g_a)
+        combined = np.vstack((my_array,next_domain_row))
+        my_array[1:,1:-1] = (
+                combined[0:-2, 1:-1] +
+                combined[2:, 1:-1] +
+                combined[1:-1,0:-2] +
+                combined[1:-1, 2:]) / 4
+        ga.release(g_a)
+    elif rank == size-1:
+        # I own the bottom rows, so get bottom row of previous domain
+        prev_domain_row = ga.get(g_a, (rlo-1,0), (rlo,dim))
+        ga.sync()
+        my_array = ga.access(g_a)
+        combined = np.vstack((prev_domain_row,my_array))
+        my_array[0:-1,1:-1] = (
+                combined[0:-2, 1:-1] +
+                combined[2:, 1:-1] +
+                combined[1:-1,0:-2] +
+                combined[1:-1, 2:]) / 4
+        ga.release(g_a)
+    else:
+        # I own the middle rows, so get top and bottom row of neighboring domain
+        next_domain_row = ga.get(g_a, (rhi,0), (rhi+1,dim))
+        prev_domain_row = ga.get(g_a, (rlo-1,0), (rlo,dim))
+        ga.sync()
+        my_array = ga.access(g_a)
+        combined = np.vstack((prev_domain_row,my_array,next_domain_row))
+        my_array[0:,1:-1] = (
+                combined[0:-2, 1:-1] +
+                combined[2:, 1:-1] +
+                combined[1:-1,0:-2] +
+                combined[1:-1, 2:]) / 4
+        ga.release(g_a)
+    if iteration % HOW_MANY_STEPS_BEFORE_CONVERGENCE_TEST == 0:
+        if convergence_test_L2(g_a, g_b):
+            break
+
+if DEBUG and rank == 0:
+    print ga.get(g_a)
+
+if rank == 0:
+    print iteration
+    print ga.wtime() - start, "seconds"
+
+
+
+\end{verbatim}
+
 
 \subsection{Heterogeneous Programming with PyCUDA and PyOpenCL}
 % TODO: i need to improve my PyOpenCL application <- Robert
@@ -307,7 +412,7 @@ With Global Arrays, communication is implicit, removing the need to perform comm
 
 %TODO: Implement OpenCL with better utilization of CPU by performing more work per thread
 
-Heterogeneous computing is an extremely hot topic in the high performance computing world and very good Python bindings have been developed for the main languages being used to program novel architectures.  PyCUDA, developed by Andreas Kloeckner, fully supports the latest implementation of NVIDIA CUDA, and PyOpenCL, also developed by Kloeckner et. al., supports OpenCL 1.1(the most recent revision of the specification) as well as adding additional functionality such as the ability to manipulate device arrays from the host.  Both bindings are elegantly designed, are very Pythonic,  and make what would otherwise be the cumbersome task easy.  True, the challenge of heterogeneous programming is writing and optimizing the kernels for an architecture, but PyCUDA and PyOpenCL enable one to do so by manipulating Python strings as well as diminishing the burden of the necessary host side boilerplate code.  
+Heterogeneous computing is an extremely hot topic in the high performance computing world and very good Python bindings have been developed for the main languages being used to program novel architectures.  PyCUDA, developed by Andreas Kloeckner, fully supports the latest implementation of NVIDIA CUDA, and PyOpenCL, also developed by Kloeckner et. al., supports OpenCL 1.1(the most recent revision of the specification) as well as adding additional functionality such as the ability to manipulate device arrays from the host \cite{klockner2011pycuda}.  Both bindings are elegantly designed, are very Pythonic,  and make what would otherwise be the cumbersome task easy.  True, the challenge of heterogeneous programming is writing and optimizing the kernels for an architecture, but PyCUDA and PyOpenCL enable one to do so by manipulating Python strings as well as diminishing the burden of the necessary host side boilerplate code.  
 
 One great feature about OpenCL is that if an implementation meets the specification, then an OpenCL kernel will run on it.  This allows for the development of cross-architecture code.  However, one must be aware that performance is not necessarily portable.  To achieve optimal performance, one must develop to the architecture under consideration.  One may find, however, that performance can be "good enough."  We have successfully run our OpenCL kernel on the AMD, Intel, and NVIDIA implementations, and while the results on each are correct, performance varies widely.  Out of all of our implementations, we see that  our NVIDIA Tesla C1060 GPU(240 Processing Elements @ 1.3 GHz) gives the best performance.  The performance of the AMD and Intel implementation are both below our Cython OpenMP application, though the Intel implementation gives the better performance over AMD for large domains.  
 
@@ -392,15 +497,18 @@ def solve(size):
 
 \end{verbatim}
 
-\section{Performance Analysis}
+%\section{Performance Analysis}
 %TODO: NEED A FORTRAN IMPLEMENTATION TO BENCHMARK AGAINST
 %TODO: Possibly use fortran co-arrays? I don't have access to an intel fortran 2008 compiler with this feature...don't know how either.
 
-To get a baseline, we benchmark our vectorized NumPy and sequential Cython implementations against a pure Fortran implementation of our Laplace solver.  
+%To get a baseline, we benchmark our vectorized NumPy and sequential Cython implementations against a pure Fortran implementation of our Laplace solver.  
 
 
 
 \section{Conclusion}
 We have implemented our Laplace solver in Python, NumPy, Cython, both parallel and sequential, MPI, OpenCL and with Global Arrays.  We have evaluated their relative performance to a baseline Fortran implementation.  We have argued that Python has now matured into a language capable of writing high performance code with a syntax primarily characterized by its brevity.  While it must be emphasized that we must retain and support legacy scientific codes, we believe that developers of new applications should seriously consider writing computational modules in Python and especially Cython.  Furthermore, the difficulties associated with programming heterogeneous architectures can be to an extent overcome by using Python wrappers.  Parallel programming is difficult and Python, especially IPython provides a convenient mechanism to interactively test and debug parallel modules.  Python's bindings to Global Arrays enable one to use the resources of a distributed cluster while abstracting away the challenges of passing messages.  Hybrid programming will become more important in the future, and current Python tools, such as mpi4py and parallel Cython, enable one to exploit this programming model.   
 
+
+\bibliographystyle{plain}
+\bibliography{references.bib}
 \end{document}  
