@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SearchIndexes Version="1.0">
+    <Documents>
+        <Document ID="3">
+            <Title>Abstract</Title>
+            <Text>\section{Abstract}
+Increasingly, the Python programming language is being used for scientific and high-performance applications. Python is attractive because of its ease of use, readability, and brevity. Prominent and large-scale organizations are adopting Python to their uses, and for exploratory programming, it is a compelling alternative to engineering suites such as MATLAB. Python is currently being used in large-scale high-performance applications, but as a glue language, controlling and wrapping modules written in compiled languages. Very recent developments in the Python community, however, now make Python a viable language to write even the computational subroutines of a large-scale scientific application.  This paper seeks to highlight two recent developments in the Python ecosystem, the new parallel features of Cython, a popular interface between Python and C, and the new Python bindings for the Global Arrays Toolkit, a venerable library which allows the abstraction of communication in a manner similar to Fortran Co-Arrays.  </Text>
+        </Document>
+        <Document ID="6">
+            <Title>Contemporary Uses of Python in Computation</Title>
+            <Text>\section{Introduction}
+\subsection{Contemporary Uses of Python in Computation}
+
+The use of Python in the sciences dates back to the 1990s. With the development of libraries supporting efficient arrays and matrices, Python became an attractive language for numerical algorithmic exploration. In the past few years, the community using Python for the  sciences has grown worldwide, evidenced by the popular  SciPy conference, and companies such as Enthought have taken advantage of this trend, offering ready built installations of Python complete with tools needed for scientific programming and visualization\cite{alghamdi2011pet}.
+
+The attraction to Python comes from its readability, interactivity, extensibility, and openness.  One with little experience in programming can easily begin writing and interacting with Python modules, and existing software libraries, written in low-level languages, can be efficiently wrapped, allowing one to use them in an interactive way.
+
+While Python is well known as an effective language to do exploratory programming, this paper addresses the use of Python in the High Performance Computing ecosystem.   The contemporary use of Python in large-scale, computationally expensive scientific applications has been largely limited  to the role of command and control, tighter I/O, and interfacing with modules written in lower level languages.  Towards this end,  Python has successfully been used for large-scale applications by disparate groups such as the Department of Energy, the Department of Defense, and the German Aerospace Centre\cite{sala2006pytrilinos}, \cite{Terry:Scipy2011:2011} .
+
+The use of Python in computational settings has become popularized, especially through the work of Perez et al. in their high profile publications.  They offer advice and advocate the use of Python in every stage of application development, from algorithmic exploration, to prototyping, to use in production code \cite{perez2011python}, \cite{perez2007ipython}.  Other work has been done in incorporating Python into high performance installations by Unpingco \cite{unpingco2008user}. </Text>
+        </Document>
+        <Document ID="4">
+            <Title>Introduction</Title>
+        </Document>
+        <Document ID="5">
+            <Title>Header</Title>
+            <Text>\documentclass[11pt]{article}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an 
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\usepackage{listings}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Python Programming for High Performance Environments}
+\author{Cloud, Robert L. \thanks{The University of Alabama, School of Engineering} \\ rcloud@uab.edu \and Florisson, Mark \and Daily, Jeff}
+\date{}
+\begin{document}
+\Maketitle
+</Text>
+        </Document>
+    </Documents>
+</SearchIndexes>
