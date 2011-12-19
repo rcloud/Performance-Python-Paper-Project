@@ -107,7 +107,7 @@ Recently, with the release of Cython version 0.15, an OpenMP backend was added t
 processing.  This is a very positive development for the Python community as it crosses a great preexisting impasse for shared memory
 parallel computing in Python.
 Because the GIL disallows Python threads to run in parallel, threads were only useful for concurrency purposes.
-Cython gives the ability to release the GIL for sections of code, and by doing this multiple threads can run in parallel on a
+Cython gives the ability to release the GIL for sections of code, and by doing this, multiple threads can run in parallel on a
 multicore computer but we lose access to native Python functionality.
 Nevertheless, even when releasing the GIL, Cython can convert Python statements to C, allowing one to continue using
 Python's extraordinary brevity in the source (before being converted to C) while at the same time realizing high performance.
@@ -161,103 +161,6 @@ In Cython 0.16 there will be more functionality available to deal with arrays (P
 and it will allow the user to do more without the GIL and with a clean syntax.
 Aditionally, the new-gained fused types functionality will allow
 the user to operate on arrays with different base types in the same code, as well as allowing template-like funcionality in general.
-
-\subsection{Parallel Features of IPython}
-%CITATIONS: Perez: IPython... 2007
-% cite IPython documentation.
-% more needs to be added to this 
-IPython\cite{perez2007ipython} is a very popular Python shell developed by Fernando Perez and Brian Granger et. al.  Recently, with version 0.11, the parallel capabilities of IPython were rewritten by Min Ragan-Kelley making use of ZeroMQ for networking.  With IPython, one can interactively manipulate and run modules across a distributed environment.  This feature brings Python's exploratory nature to parallel environments and can be very useful for developing and debugging parallel applications.  We refer the interested reader to the IPython documentation.
-
-\subsection{MPI Implementation with mpi4py}
-Python bindings for MPI have been available since the early 2000's with the PyMPI wrappers from Lawrence Livermore National Labs\cite{miller2002pympi}.  A more contemporary and more fully featured library is available through mpi4py developed by Lisandro Dalcin\cite{dalcin2008mpi}.  mpi4py provides a complete set of bindings to the MPI 2 specification and has been used successfully in very large scale applications. mpi4py enables one to both pass messages composed of regular Python objects through pickling and the efficient messaging of NumPy buffers.  In order to achieve both high performance and convenience, one should make use of both features.
-
-
-\begin{verbatim}
-iteration = 0
-    while cont_vals[-1] == True: # We sort this list, True last element unless all False
-        if iteration % 2 == 0: #even
-            if rank != 0:
-                comm.Send(u[1], dest=(rank - 1)) # send top row to proc above
-            if rank != size - 1:
-                comm.Recv(u[-1], source=(rank + 1)) # recv boundary from proc below
-            if rank != size - 1:
-                comm.Send(u[-2], dest=(rank + 1)) # send bottom row to proc below
-            if rank != 0:
-                comm.Recv(u[0], source=(rank - 1)) # recv top row from proc above
-            solve(u, u_new, u.shape[0], u.shape[1])
-        
-        else:
-            if rank != 0:
-                comm.Send(u_new[1], dest=(rank - 1)) # send top row to proc above
-            if rank != size - 1:
-                comm.Recv(u_new[-1], source=(rank + 1)) # recv boundary from proc below
-            if rank != size - 1:
-                comm.Send(u_new[-2], dest=(rank + 1)) # send bottom row to proc below
-            if rank != 0:
-                comm.Recv(u_new[0], source=(rank - 1)) # recv top row from proc above
-            solve(u_new, u, u.shape[0], u.shape[1])
-            
-        #test for convergence
-        if iteration % 1000 == 0:
-            cont = False
-            if(np.max(u_new - u) > eps):
-                cont = True
-            cont_vals = comm.allgather(cont)
-            cont_vals.sort()
-        iteration = iteration + 1    
-\end{verbatim}
-
-
-Here, the communicational part is the necessary addition to our solver.  We must communicate the boundaries between the processes using the Send and Recv methods of the communicator objects.  We continue the iteration until the difference between the two solution matrices fall below a specified threshold epsilon.  This is managed by the communication of a boolean Python list object contvals which is gathered from each process to rank 0.  We send the rows as NumPy buffers using the optimized methods which begin with a capital letter.  We test for convergence every 1000 iterations, sort contvals and if any of the items in the list evaluate to True, continue the iteration.  
-
-We have abstracted away our solve routine.  By doing this, we can implement it in a number of ways. We could, for instance, make use of our straight Python solve routine, our vectorized NumPy solve routine, or a solve routine written in Cython.  
-
-Furthermore, we never have to store the complete matrix in the memory of a single process.  Rather, initialization data is broadcasted to each process which initializes its own sub matrix using the following routine:
-
-
-
-\begin{verbatim}
-def initialize(dim, comm, rank, size):
-    init_vals = None    
-    if rank == 0:
-        top = random.random() * 100
-        left = random.random() * 75
-        right = random.random() * 50
-        bottom = random.random() * 25
-        init_vals = {'top':top, 'left':left, 'right':right, 'bottom':bottom}    
-    init_vals = comm.bcast(obj=init_vals)
-    u = np.zeros((dim / size, dim))    
-    if rank == 0: 
-        u = np.vstack((u, np.zeros(dim)))
-        u[0, :] = init_vals['top']
-        u[:, 0] = init_vals['left']
-        u[:, -1] = init_vals['right']
- 
-    elif rank == size - 1:
-        u = np.vstack((np.zeros(dim), u))
-        u[-1, :] = init_vals['bottom']
-        u[:, 0] = init_vals['left']
-        u[:, -1] = init_vals['right']
-    else:
-        u = np.vstack((np.zeros(dim), u, np.zeros(dim)))
-        u[:, 0] = init_vals['left']
-        u[:, -1] = init_vals['right']
- 
-    u_new = np.copy(u)
-    return u, u_new
-\end{verbatim}
-
-
-
-Again, taking advantage of mpi4py's ability to send native Python objects, we utilize a dictionary to store the semi random initialization values.  Beginning with equally sized NumPy arrays(total m=n dimensions divided by number of processes that we specify when submitting to the cluster's queue), we stack them with the boundary rows, on the bottom for the top process, the top row for the bottom process and both the top and bottom for intermediate processes.  By using semi random boundary conditions we can make our problem more similar to a real world unsteady system, where we would solve multiple times, each iterating until convergence, to produce data for the changing conditions.  
-
-\subsection{Hybrid Parallel Programming with OpenMP and MPI}
-%TODO: data needs to be gathered here.  A problem is that I have limited access to clusters with high number of cores per count.  I can run test jobs on amazon ec2 clusters. Starcluster may be a possibility.  Alternatively, I will soon gain access to some DoD supercomputers which would enable me to test my application on the order of thousands of cores.  I'm just waiting for my security clearance to come through.  
-%CITATIONS: Rabenseifner, R, G Hager, and G Jost. "Hybrid Mpi/Openmp Parallel Programming on Clusters of Multi-Core SMP Nodes." In Parallel, Distributed and Network-Based Processing, 2009 17Th Euromicro International Conference on. 2009.	
-
-With the combination of mpi4py and the new OpenMP backend of Cython, it becomes possible to develop hybrid OpenMP/MPI applications which take full advantage of shared memory architectures in a distributed environment.  This will become ever more important as multicore computers reach the level of many-core(see e.g. AMD's Bulldozer with 16 cores or Intel's Xeon with 10 cores and 20 threads).  
-
-The advantages and pitfalls of hybrid programming are discussed in some detail in Rabenseifner et. al. \cite{rabenseifner2009hybrid}
 
 \subsection{Adding Brevity to Distributed Computing with Global Arrays}
 %Jeff can add his wisdom and experience to this section
@@ -393,6 +296,105 @@ if rank == 0:
 \end{verbatim}
 
 
+\subsection{MPI Implementation with mpi4py}
+Python bindings for MPI have been available since the early 2000's with the PyMPI wrappers from Lawrence Livermore National Labs\cite{miller2002pympi}.  A more contemporary and more fully featured library is available through mpi4py developed by Lisandro Dalcin\cite{dalcin2008mpi}.  mpi4py provides a complete set of bindings to the MPI 2 specification and has been used successfully in very large scale applications. mpi4py enables one to both pass messages composed of regular Python objects through pickling and the efficient messaging of NumPy buffers.  In order to achieve both high performance and convenience, one should make use of both features.
+
+
+\begin{verbatim}
+iteration = 0
+    while cont_vals[-1] == True: # We sort this list, True last element unless all False
+        if iteration % 2 == 0: #even
+            if rank != 0:
+                comm.Send(u[1], dest=(rank - 1)) # send top row to proc above
+            if rank != size - 1:
+                comm.Recv(u[-1], source=(rank + 1)) # recv boundary from proc below
+            if rank != size - 1:
+                comm.Send(u[-2], dest=(rank + 1)) # send bottom row to proc below
+            if rank != 0:
+                comm.Recv(u[0], source=(rank - 1)) # recv top row from proc above
+            solve(u, u_new, u.shape[0], u.shape[1])
+        
+        else:
+            if rank != 0:
+                comm.Send(u_new[1], dest=(rank - 1)) # send top row to proc above
+            if rank != size - 1:
+                comm.Recv(u_new[-1], source=(rank + 1)) # recv boundary from proc below
+            if rank != size - 1:
+                comm.Send(u_new[-2], dest=(rank + 1)) # send bottom row to proc below
+            if rank != 0:
+                comm.Recv(u_new[0], source=(rank - 1)) # recv top row from proc above
+            solve(u_new, u, u.shape[0], u.shape[1])
+            
+        #test for convergence
+        if iteration % 1000 == 0:
+            cont = False
+            if(np.max(u_new - u) > eps):
+                cont = True
+            cont_vals = comm.allgather(cont)
+            cont_vals.sort()
+        iteration = iteration + 1    
+\end{verbatim}
+
+
+Here, the communicational part is the necessary addition to our solver.  We must communicate the boundaries between the processes using the Send and Recv methods of the communicator objects.  We continue the iteration until the difference between the two solution matrices fall below a specified threshold epsilon.  This is managed by the communication of a boolean Python list object contvals which is gathered from each process to rank 0.  We send the rows as NumPy buffers using the optimized methods which begin with a capital letter.  We test for convergence every 1000 iterations, sort contvals and if any of the items in the list evaluate to True, continue the iteration.  
+
+We have abstracted away our solve routine.  By doing this, we can implement it in a number of ways. We could, for instance, make use of our straight Python solve routine, our vectorized NumPy solve routine, or a solve routine written in Cython.  
+
+Furthermore, we never have to store the complete matrix in the memory of a single process.  Rather, initialization data is broadcasted to each process which initializes its own sub matrix using the following routine:
+
+
+
+\begin{verbatim}
+def initialize(dim, comm, rank, size):
+    init_vals = None    
+    if rank == 0:
+        top = random.random() * 100
+        left = random.random() * 75
+        right = random.random() * 50
+        bottom = random.random() * 25
+        init_vals = {'top':top, 'left':left, 'right':right, 'bottom':bottom}    
+    init_vals = comm.bcast(obj=init_vals)
+    u = np.zeros((dim / size, dim))    
+    if rank == 0: 
+        u = np.vstack((u, np.zeros(dim)))
+        u[0, :] = init_vals['top']
+        u[:, 0] = init_vals['left']
+        u[:, -1] = init_vals['right']
+ 
+    elif rank == size - 1:
+        u = np.vstack((np.zeros(dim), u))
+        u[-1, :] = init_vals['bottom']
+        u[:, 0] = init_vals['left']
+        u[:, -1] = init_vals['right']
+    else:
+        u = np.vstack((np.zeros(dim), u, np.zeros(dim)))
+        u[:, 0] = init_vals['left']
+        u[:, -1] = init_vals['right']
+ 
+    u_new = np.copy(u)
+    return u, u_new
+\end{verbatim}
+
+
+
+Again, taking advantage of mpi4py's ability to send native Python objects, we utilize a dictionary to store the semi random initialization values.  Beginning with equally sized NumPy arrays(total m=n dimensions divided by number of processes that we specify when submitting to the cluster's queue), we stack them with the boundary rows, on the bottom for the top process, the top row for the bottom process and both the top and bottom for intermediate processes.  By using semi random boundary conditions we can make our problem more similar to a real world unsteady system, where we would solve multiple times, each iterating until convergence, to produce data for the changing conditions.  
+
+\subsection{Hybrid Parallel Programming with OpenMP and MPI}
+%TODO: data needs to be gathered here.  A problem is that I have limited access to clusters with high number of cores per count.  I can run test jobs on amazon ec2 clusters. Starcluster may be a possibility.  Alternatively, I will soon gain access to some DoD supercomputers which would enable me to test my application on the order of thousands of cores.  I'm just waiting for my security clearance to come through.  
+%CITATIONS: Rabenseifner, R, G Hager, and G Jost. "Hybrid Mpi/Openmp Parallel Programming on Clusters of Multi-Core SMP Nodes." In Parallel, Distributed and Network-Based Processing, 2009 17Th Euromicro International Conference on. 2009.	
+
+With the combination of mpi4py and the new OpenMP backend of Cython, it becomes possible to develop hybrid OpenMP/MPI applications which take full advantage of shared memory architectures in a distributed environment.  This will become ever more important as multicore computers reach the level of many-core(see e.g. AMD's Bulldozer with 16 cores or Intel's Xeon with 10 cores and 20 threads).  
+
+The advantages and pitfalls of hybrid programming are discussed in some detail in Rabenseifner et. al. \cite{rabenseifner2009hybrid}
+
+\subsection{Parallel Features of IPython}
+%CITATIONS: Perez: IPython... 2007
+% cite IPython documentation.
+% more needs to be added to this 
+IPython\cite{perez2007ipython} is a very popular Python shell developed by Fernando Perez and Brian Granger et. al.  Recently, with version 0.11, the parallel capabilities of IPython were rewritten by Min Ragan-Kelley making use of ZeroMQ for networking.  With IPython, one can interactively manipulate and run modules across a distributed environment.  This feature brings Python's exploratory nature to parallel environments and can be very useful for developing and debugging parallel applications.  Parallel programming is difficult, and Python, especially iPython provides a convenient mechanism to interactively test and debug parallel modules.  We refer the interested reader to the IPython documentation.
+
+
+
 \subsection{Heterogeneous Programming with PyCUDA and PyOpenCL}
 % TODO: i need to improve my PyOpenCL application <- Robert
 % REFERENCES: Klšckner, A, N Pinto, Y Lee, B Catanzaro, P Ivanov, and A Fasih. "Pycuda and Pyopencl: A Scripting-Based Approach to GPU Run-Time Code Generation." Parallel Computing (2011).	
@@ -486,17 +488,9 @@ def solve(size):
 
 \end{verbatim}
 
-%\section{Performance Analysis}
-%TODO: NEED A FORTRAN IMPLEMENTATION TO BENCHMARK AGAINST
-%TODO: Possibly use fortran co-arrays? I don't have access to an intel fortran 2008 compiler with this feature...don't know how either.
-
-%To get a baseline, we benchmark our vectorized NumPy and sequential Cython implementations against a pure Fortran implementation of our Laplace solver.  
-
-
 
 \section{Conclusion}
-We have implemented our Laplace solver in Python, NumPy, Cython, both parallel and sequential, MPI, OpenCL and with Global Arrays.  We have evaluated their relative performance to a baseline Fortran implementation.  We have argued that Python has now matured into a language capable of writing high performance code with a syntax primarily characterized by its brevity.  While it must be emphasized that we must retain and support legacy scientific codes, we believe that developers of new applications should seriously consider writing computational modules in Python and especially Cython.  Furthermore, the difficulties associated with programming heterogeneous architectures can be to an extent overcome by using Python wrappers.  Parallel programming is difficult and Python, especially IPython provides a convenient mechanism to interactively test and debug parallel modules.  Python's bindings to Global Arrays enable one to use the resources of a distributed cluster while abstracting away the challenges of passing messages.  Hybrid programming will become more important in the future, and current Python tools, such as mpi4py and parallel Cython, enable one to exploit this programming model.   
-
+We have discussed in detail the functionality of two new mechanisms for parallel programming with Python, OpenMP Cython and Global Arrays.  We have also highlighted some other scientific programming techniques with Python including iPython, OpenCL, and mpi4py.   We have argued that recent developments, most notably Cython's parallel functionality opens the door to efficient programming of computational modules, and when combined with mpi4py, scalable high performance applications can be written entirely in Python.  While it must be emphasized that we must retain and support legacy scientific codes, we believe that developers of new applications should seriously consider writing computational modules in Python and especially Cython.  Furthermore, the difficulties associated with programming heterogeneous architectures can be to an extent overcome by using Python wrappers.    Python's bindings to Global Arrays enable one to use the resources of a distributed cluster while abstracting away the challenges of passing messages.  Hybrid shared-distributed memory programming will become even more important in the future, and current Python tools, such as mpi4py and parallel Cython, enable one to exploit this programming model.   
 
 \bibliographystyle{plain}
 \bibliography{references.bib}

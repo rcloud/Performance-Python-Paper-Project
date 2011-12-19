@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  13 DEC 2011 15:14
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  19 DEC 2011 12:36
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -266,80 +266,80 @@ Overfull \hbox (82.46071pt too wide) in paragraph at lines 93--94
 [][][][][][][][][][][][][][][][][] 
  []
 
-[5] [6] [7]
-Overfull \hbox (75.8799pt too wide) in paragraph at lines 208--208
+[5] [6] [7] [8] [9]
+Overfull \hbox (29.8904pt too wide) in paragraph at lines 296--296
+[]        \OT1/cmtt/m/n/10.95 # I own the middle rows, so get top and bottom ro
+w of neighboring domain[] 
+ []
+
+[10]
+Overfull \hbox (75.8799pt too wide) in paragraph at lines 336--336
 []    \OT1/cmtt/m/n/10.95 while cont_vals[-1] == True: # We sort this list, Tru
 e last element unless all False[] 
  []
 
 
-Overfull \hbox (12.64433pt too wide) in paragraph at lines 208--208
+Overfull \hbox (12.64433pt too wide) in paragraph at lines 336--336
 []                \OT1/cmtt/m/n/10.95 comm.Send(u[1], dest=(rank - 1)) # send t
 op row to proc above[] 
  []
 
 
-Overfull \hbox (47.13646pt too wide) in paragraph at lines 208--208
+Overfull \hbox (47.13646pt too wide) in paragraph at lines 336--336
 []                \OT1/cmtt/m/n/10.95 comm.Recv(u[-1], source=(rank + 1)) # rec
 v boundary from proc below[] 
  []
 
 
-Overfull \hbox (35.63908pt too wide) in paragraph at lines 208--208
+Overfull \hbox (35.63908pt too wide) in paragraph at lines 336--336
 []                \OT1/cmtt/m/n/10.95 comm.Send(u[-2], dest=(rank + 1)) # send 
 bottom row to proc below[] 
  []
 
 
-Overfull \hbox (35.63908pt too wide) in paragraph at lines 208--208
+Overfull \hbox (35.63908pt too wide) in paragraph at lines 336--336
 []                \OT1/cmtt/m/n/10.95 comm.Recv(u[0], source=(rank - 1)) # recv
  top row from proc above[] 
  []
 
 
-Overfull \hbox (35.63908pt too wide) in paragraph at lines 208--208
+Overfull \hbox (35.63908pt too wide) in paragraph at lines 336--336
 []                \OT1/cmtt/m/n/10.95 comm.Send(u_new[1], dest=(rank - 1)) # se
 nd top row to proc above[] 
  []
 
 
-Overfull \hbox (70.13121pt too wide) in paragraph at lines 208--208
+Overfull \hbox (70.13121pt too wide) in paragraph at lines 336--336
 []                \OT1/cmtt/m/n/10.95 comm.Recv(u_new[-1], source=(rank + 1)) #
  recv boundary from proc below[] 
  []
 
 
-Overfull \hbox (58.63383pt too wide) in paragraph at lines 208--208
+Overfull \hbox (58.63383pt too wide) in paragraph at lines 336--336
 []                \OT1/cmtt/m/n/10.95 comm.Send(u_new[-2], dest=(rank + 1)) # s
 end bottom row to proc below[] 
  []
 
 
-Overfull \hbox (58.63383pt too wide) in paragraph at lines 208--208
+Overfull \hbox (58.63383pt too wide) in paragraph at lines 336--336
 []                \OT1/cmtt/m/n/10.95 comm.Recv(u_new[0], source=(rank - 1)) # 
 recv top row from proc above[] 
  []
 
-[8]
-Overfull \hbox (6.89565pt too wide) in paragraph at lines 248--248
+[11]
+Overfull \hbox (6.89565pt too wide) in paragraph at lines 376--376
 []        \OT1/cmtt/m/n/10.95 init_vals = {'top':top, 'left':left, 'right':righ
 t, 'bottom':bottom}[] 
  []
 
-[9] [10] [11] [12]
-Overfull \hbox (29.8904pt too wide) in paragraph at lines 393--393
-[]        \OT1/cmtt/m/n/10.95 # I own the middle rows, so get top and bottom ro
-w of neighboring domain[] 
- []
-
-[13] [14]
-Overfull \hbox (12.64433pt too wide) in paragraph at lines 487--487
+[12] [13] [14]
+Overfull \hbox (12.64433pt too wide) in paragraph at lines 489--489
 []                    \OT1/cmtt/m/n/10.95 if (y != 0 && y != WIDTH - 1 && x != 
 0 && x != WIDTH - 1)[] 
  []
 
 [15]
-Overfull \hbox (24.14171pt too wide) in paragraph at lines 487--487
+Overfull \hbox (24.14171pt too wide) in paragraph at lines 489--489
 []    \OT1/cmtt/m/n/10.95 u_new_dev = cl.Buffer(ctx, mf.READ_WRITE | mf.COPY_HO
 ST_PTR, hostbuf=u_new)[] 
  []
@@ -369,7 +369,7 @@ Here is how much of TeX's memory you used:
  6815 multiletter control sequences out of 15000+200000
  14056 words of font info for 54 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 42i,11n,40p,1239b,1441s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,11n,40p,1253b,1441s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2011/texmf-dist/fonts/type1/public/am
 sfonts/cm/cmbx10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmbx12.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsf
@@ -384,7 +384,7 @@ pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pf
 b></usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
 </usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><
 /usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on paper.pdf (18 pages, 208051 bytes).
+Output written on paper.pdf (18 pages, 208242 bytes).
 PDF statistics:
  118 PDF objects out of 1000 (max. 8388607)
  83 compressed objects within 1 object stream
